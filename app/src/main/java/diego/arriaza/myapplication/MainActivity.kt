@@ -48,12 +48,12 @@ class MainActivity : AppCompatActivity() {
 
             //2- Creo un statement
             val statement = objConexion?.createStatement()
-            val resulSet = statement?.executeQuery("select * from tbMascotas")!!
+            val resulSet = statement?.executeQuery("select * from tbmascotas")!!
             val mascotas = mutableListOf<dataClassMascotas>()
 
             //Recorro todos los registros de la base de datos
             while (resulSet.next()){
-                val nombre = resulSet.getString("nombreMascota")
+                val nombre = resulSet.getString("nombre")
                 val mascota = dataClassMascotas(nombre)
                 mascotas.add(mascota)
             }
@@ -82,7 +82,13 @@ class MainActivity : AppCompatActivity() {
                 addMascota.setInt(3, txtEdad.text.toString().toInt())
                 addMascota.executeUpdate()
 
-                Toast.makeText(this@MainActivity, "Mascota registrada", Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@MainActivity, "Mascota registrada", Toast.LENGTH_LONG).show()
+
+                //Refresco la lista
+                val nuevasMascotas = obtenerDatos()
+                withContext(Dispatchers.Main){
+                    (rcvMascotas.adapter as? Adaptador)?.AnctualizarLista(nuevasMascotas)
+                }
             }
         }
 
